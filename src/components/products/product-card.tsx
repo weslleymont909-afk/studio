@@ -43,7 +43,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const [selectedSize, setSelectedSize] = React.useState<Size | undefined>(
     product.sizes.length === 1 ? product.sizes[0] : undefined
   );
-  const [selectedGender, setSelectedGender] = React.useState<Gender | undefined>(product.genders ? product.genders[0] : undefined);
+  const [selectedGender, setSelectedGender] = React.useState<Gender | undefined>(
+    product.genders && product.genders.length === 1 ? product.genders[0] : (product.genders?.includes('unisex') ? 'unisex' : undefined)
+  );
 
   const image = PlaceHolderImages.find((img) => img.id === product.imageId);
 
@@ -138,7 +140,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
           
-          {product.genders && product.genders.length > 0 && (
+          {product.genders && product.genders.length > 0 && product.genders[0] !== 'unisex' && (
             <div>
               <Label>Variação</Label>
               <RadioGroup
