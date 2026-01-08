@@ -109,12 +109,11 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-3 gap-4">
-            <FormField
+        <FormField
             control={form.control}
             name="street"
             render={({ field }) => (
-                <FormItem className="col-span-3">
+                <FormItem>
                 <FormLabel>Rua</FormLabel>
                 <FormControl>
                     <Input placeholder="Sua rua" {...field} />
@@ -123,6 +122,8 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
                 </FormItem>
             )}
             />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            
             <FormField
             control={form.control}
             name="number"
@@ -140,7 +141,7 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
             control={form.control}
             name="complement"
             render={({ field }) => (
-                <FormItem className="col-span-2">
+                <FormItem className="sm:col-span-2">
                 <FormLabel>Complemento</FormLabel>
                 <FormControl>
                     <Input placeholder="Apto, bloco, etc." {...field} />
@@ -163,7 +164,7 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
                 </FormItem>
             )}
             />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
             control={form.control}
             name="city"
