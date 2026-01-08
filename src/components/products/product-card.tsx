@@ -29,7 +29,6 @@ import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/hooks/use-toast';
 import type { Product, Size, Gender } from '@/lib/types';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { SizeSuggestion } from './size-suggestion';
 
 interface ProductCardProps {
   product: Product;
@@ -177,8 +176,6 @@ export function ProductCard({ product }: ProductCardProps) {
               className="mt-2 w-24"
             />
           </div>
-
-          <SizeSuggestion animalType={product.category} garmentType={product.name} />
 
         </div>
         <Button onClick={handleAddToCart}>Adicionar ao Pedido</Button>
