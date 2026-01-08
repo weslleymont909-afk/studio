@@ -5,15 +5,6 @@ import type { Product } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProductCard } from './product-card';
 import { Dog, Cat } from 'lucide-react';
-import Image from 'next/image';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 
 interface ProductListProps {
   allProducts: Product[];
@@ -42,14 +33,14 @@ export function ProductList({ allProducts }: ProductListProps) {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="dog">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 mt-6">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-6">
           {dogProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </TabsContent>
       <TabsContent value="cat">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 mt-6">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-6">
           {catProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

@@ -21,7 +21,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl items-start gap-8 py-12 lg:grid-cols-1">
+            <div className="mx-auto max-w-5xl py-12">
               <ProductList allProducts={products} />
             </div>
           </div>
