@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "dog-surgical-shirt-male",
+      "description": "Surgical recovery shirt for a male dog.",
+      "imageUrl": "https://images.unsplash.com/photo-1591703225792-9a0feeca2e9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkb2clMjBjbG90aGVzfGVufDB8fHx8MTc2NzkwODU3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dog clothes"
+    },
+    {
+      "id": "dog-surgical-shirt-female",
+      "description": "Surgical recovery shirt for a female dog.",
+      "imageUrl": "https://images.unsplash.com/photo-1665321739939-5b9985df0f8f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkb2clMjBhcHBhcmVsfGVufDB8fHx8MTc2NzkwODU3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dog apparel"
+    },
+    {
+      "id": "dog-surgical-shirt-unisex",
+      "description": "Unisex surgical recovery shirt for dogs.",
+      "imageUrl": "https://images.unsplash.com/photo-1765604551468-2b012465ba59?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXQlMjByZWNvdmVyeXxlbnwwfHx8fDE3Njc5MDg1NzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pet recovery"
+    },
+    {
+      "id": "cat-surgical-shirt",
+      "description": "Surgical recovery shirt for a cat.",
+      "imageUrl": "https://images.unsplash.com/photo-1666230836805-a4f792b89876?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjYXQlMjBjbG90aGVzfGVufDB8fHx8MTc2NzkwODU3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cat clothes"
+    },
+    {
+      "id": "cat-surgical-suit",
+      "description": "Full body surgical recovery suit for a cat.",
+      "imageUrl": "https://images.unsplash.com/photo-1749566788007-5ccdb2e86827?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjYXQlMjByZWNvdmVyeXxlbnwwfHx8fDE3Njc5MDg1NzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cat recovery"
+    }
+  ]
 }
