@@ -38,7 +38,7 @@ export const products: Product[] = [
       'Modelo exclusivo para felinos, com tecido elástico e design que evita o estresse durante a recuperação.',
     category: 'cat',
     imageId: 'cat-surgical-shirt',
-    sizes: ['P', 'M', 'G'],
+    sizes: ['00', '01', '02', '03', '04', '05'],
     isBestSeller: true,
   },
   {
@@ -48,6 +48,6 @@ export const products: Product[] = [
       'Body completo que oferece segurança extra, impedindo o acesso a pontos e curativos em qualquer parte do tronco.',
     category: 'cat',
     imageId: 'cat-surgical-suit',
-    sizes: ['P', 'M', 'G'],
+    sizes: ['00', '01', '02', '03', '04', '05'],
   },
 ];
