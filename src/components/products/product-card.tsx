@@ -40,7 +40,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = React.useState(false);
   const [quantity, setQuantity] = React.useState(1);
-  const [selectedSize, setSelectedSize] = React.useState<Size | undefined>();
+  const [selectedSize, setSelectedSize] = React.useState<Size | undefined>(
+    product.sizes.length === 1 ? product.sizes[0] : undefined
+  );
   const [selectedGender, setSelectedGender] = React.useState<Gender | undefined>(product.genders ? product.genders[0] : undefined);
 
   const image = PlaceHolderImages.find((img) => img.id === product.imageId);
@@ -71,7 +73,9 @@ export function ProductCard({ product }: ProductCardProps) {
     setIsOpen(false);
     // Reset state for next open
     setQuantity(1);
-    setSelectedSize(undefined);
+    if (product.sizes.length > 1) {
+      setSelectedSize(undefined);
+    }
   };
 
   return (
@@ -111,26 +115,28 @@ export function ProductCard({ product }: ProductCardProps) {
           <DialogTitle>{product.name}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
-          <div>
-            <Label>Tamanhos Disponíveis</Label>
-            <RadioGroup
-              value={selectedSize}
-              onValueChange={(value: Size) => setSelectedSize(value)}
-              className="mt-2 flex flex-wrap gap-2"
-            >
-              {product.sizes.map((size) => (
-                <div key={size} className="flex items-center">
-                  <RadioGroupItem value={size} id={`${product.id}-${size}`} className="sr-only" />
-                  <Label
-                    htmlFor={`${product.id}-${size}`}
-                    className="cursor-pointer rounded-md border-2 border-muted bg-popover px-3 py-1.5 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                  >
-                    {size}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </div>
+          {product.sizes.length > 1 && (
+            <div>
+              <Label>Tamanhos Disponíveis</Label>
+              <RadioGroup
+                value={selectedSize}
+                onValueChange={(value: Size) => setSelectedSize(value)}
+                className="mt-2 flex flex-wrap gap-2"
+              >
+                {product.sizes.map((size) => (
+                  <div key={size} className="flex items-center">
+                    <RadioGroupItem value={size} id={`${product.id}-${size}`} className="sr-only" />
+                    <Label
+                      htmlFor={`${product.id}-${size}`}
+                      className="cursor-pointer rounded-md border-2 border-muted bg-popover px-3 py-1.5 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      {size}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          )}
           
           {product.genders && product.genders.length > 0 && (
             <div>
