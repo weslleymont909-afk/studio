@@ -17,7 +17,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/hooks/use-toast';
 import { WHATSAPP_PHONE_NUMBER } from '@/lib/constants';
-import type jsPDF from 'jspdf';
 
 const orderFormSchema = z.object({
   fullName: z.string().min(2, { message: 'Nome completo é obrigatório.' }),
@@ -34,7 +33,7 @@ const orderFormSchema = z.object({
 type OrderFormValues = z.infer<typeof orderFormSchema>;
 
 interface OrderFormProps {
-    setOrderFormOpen: (isOpen: boolean) => void;
+  setOrderFormOpen: (isOpen: boolean) => void;
 }
 
 export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
@@ -57,16 +56,23 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
   });
 
   const generateOrderMessage = (data: OrderFormValues) => {
-    const customerDetails = `*DADOS DO CLIENTE:*\nNome: ${data.fullName}\nTelefone: ${data.phone}\nEndereço: ${data.street}, ${data.number}${data.complement ? `, ${data.complement}`: ''} - ${data.neighborhood}, ${data.city}/${data.state}`;
-    
-    const orderItems = items.map(item => `- ${item.quantity}x ${item.product.name} (Tamanho: ${item.size}${item.gender && item.gender !== 'unisex' ? `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}` : ''}) - ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.price * item.quantity)}`).join('\n');
+    const customerDetails = `*DADOS DO CLIENTE:*\nNome: ${data.fullName}\nTelefone: ${data.phone}\nEndereço: ${data.street}, ${data.number}${data.complement ? `, ${data.complement}` : ''} - ${data.neighborhood}, ${data.city}/${data.state}`;
+
+    const orderItems = items
+      .map(
+        (item) =>
+          `- ${item.quantity}x ${item.product.name} (Tamanho: ${item.size}${item.gender && item.gender !== 'unisex' ? `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}` : ''}) - ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.price * item.quantity)}`
+      )
+      .join('\n');
 
     const total = `\n*Subtotal: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPrice)}*`;
-    
-    const observations = data.observations ? `\n\n*OBSERVAÇÕES:*\n${data.observations}` : '';
+
+    const observations = data.observations
+      ? `\n\n*OBSERVAÇÕES:*\n${data.observations}`
+      : '';
 
     return `Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.\n\n${customerDetails}\n\n*PEDIDO:*\n${orderItems}${total}${observations}\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
-  }
+  };
 
   const handleGeneratePdf = async (data: OrderFormValues) => {
     const { default: jsPDF } = await import('jspdf');
@@ -81,20 +87,21 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     doc.setFontSize(12);
     doc.text(pdfMessage, 10, 20);
     doc.save('pedido.pdf');
-  }
+  };
 
   const onSubmit = async (data: OrderFormValues) => {
     await handleGeneratePdf(data);
-    
+
     const message = generateOrderMessage(data);
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodedMessage}`;
 
     window.open(whatsappUrl, '_blank');
-    
+
     toast({
-        title: "PDF Gerado e Pedido Formatado!",
-        description: "Seu pedido foi salvo como PDF. Conclua o envio no WhatsApp e anexe o arquivo gerado.",
+      title: 'PDF Gerado! Anexe-o no WhatsApp.',
+      description:
+        'Seu pedido foi salvo como PDF. Para finalizar, anexe o arquivo na conversa do WhatsApp que abriu.',
     });
 
     clearCart();
@@ -131,88 +138,88 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
           )}
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField
-                control={form.control}
-                name="street"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Rua</FormLabel>
-                    <FormControl>
-                        <Input placeholder="Sua rua" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-            <FormField
+          <FormField
+            control={form.control}
+            name="street"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Rua</FormLabel>
+                <FormControl>
+                  <Input placeholder="Sua rua" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
             control={form.control}
             name="number"
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel>Número</FormLabel>
                 <FormControl>
-                    <Input placeholder="Nº" {...field} />
+                  <Input placeholder="Nº" {...field} />
                 </FormControl>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
+          />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
-            <FormField
-                control={form.control}
-                name="complement"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Complemento</FormLabel>
-                    <FormControl>
-                        <Input placeholder="Apto, bloco, etc." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-            />
-        </div>
-         <FormField
+          <FormField
             control={form.control}
-            name="neighborhood"
+            name="complement"
             render={({ field }) => (
-                <FormItem>
-                <FormLabel>Bairro</FormLabel>
+              <FormItem>
+                <FormLabel>Complemento</FormLabel>
                 <FormControl>
-                    <Input placeholder="Seu bairro" {...field} />
+                  <Input placeholder="Apto, bloco, etc." {...field} />
                 </FormControl>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
+          />
+        </div>
+        <FormField
+          control={form.control}
+          name="neighborhood"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bairro</FormLabel>
+              <FormControl>
+                <Input placeholder="Seu bairro" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField
+          <FormField
             control={form.control}
             name="city"
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel>Cidade</FormLabel>
                 <FormControl>
-                    <Input placeholder="Sua cidade" {...field} />
+                  <Input placeholder="Sua cidade" {...field} />
                 </FormControl>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
-            <FormField
+          />
+          <FormField
             control={form.control}
             name="state"
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel>Estado</FormLabel>
                 <FormControl>
-                    <Input placeholder="UF" {...field} />
+                  <Input placeholder="UF" {...field} />
                 </FormControl>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
+          />
         </div>
 
         <FormField
@@ -222,21 +229,25 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
             <FormItem>
               <FormLabel>Observações Adicionais</FormLabel>
               <FormControl>
-                <Textarea placeholder="Alguma observação sobre o pedido?" {...field} />
+                <Textarea
+                  placeholder="Alguma observação sobre o pedido?"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <p className="text-xs text-muted-foreground pt-2">
-          “O valor do frete será calculado e informado posteriormente pelo WhatsApp.”
+          “O valor do frete será calculado e informado posteriormente pelo
+          WhatsApp.”
         </p>
 
         <div className="flex flex-col gap-2">
-            <Button type="submit" className="w-full">
-              Gerar PDF e Enviar via WhatsApp
-            </Button>
+          <Button type="submit" className="w-full">
+            Gerar PDF e Enviar via WhatsApp
+          </Button>
         </div>
       </form>
     </Form>
