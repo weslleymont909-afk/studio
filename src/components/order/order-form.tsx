@@ -74,24 +74,7 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     return `Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.\n\n${customerDetails}\n\n*PEDIDO:*\n${orderItems}${total}${observations}\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
   };
 
-  const handleGeneratePdf = async (data: OrderFormValues) => {
-    const { default: jsPDF } = await import('jspdf');
-    const doc = new jsPDF();
-    const message = generateOrderMessage(data);
-
-    // Remove asteriscos para o PDF
-    const pdfMessage = message.replace(/\*/g, '');
-
-    doc.setFontSize(16);
-    doc.text('Resumo do Pedido', 10, 10);
-    doc.setFontSize(12);
-    doc.text(pdfMessage, 10, 20);
-    doc.save('pedido.pdf');
-  };
-
-  const onSubmit = async (data: OrderFormValues) => {
-    await handleGeneratePdf(data);
-
+  const onSubmit = (data: OrderFormValues) => {
     const message = generateOrderMessage(data);
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodedMessage}`;
@@ -99,9 +82,9 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     window.open(whatsappUrl, '_blank');
 
     toast({
-      title: 'PDF Gerado! Anexe-o no WhatsApp.',
+      title: 'Pedido Pronto!',
       description:
-        'Seu pedido foi salvo como PDF. Para finalizar, anexe o arquivo na conversa do WhatsApp que abriu.',
+        'Sua mensagem para o WhatsApp foi gerada. Finalize o envio na nova aba.',
     });
 
     clearCart();
@@ -246,7 +229,7 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
 
         <div className="flex flex-col gap-2">
           <Button type="submit" className="w-full">
-            Gerar PDF e Enviar via WhatsApp
+            Enviar via WhatsApp
           </Button>
         </div>
       </form>
