@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import jsPDF from 'jspdf';
 import {
   Form,
   FormControl,
@@ -55,7 +56,7 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     },
   });
 
-  const onSubmit = (data: OrderFormValues) => {
+  const generateOrderMessage = (data: OrderFormValues) => {
     const customerDetails = `*DADOS DO CLIENTE:*\nNome: ${data.fullName}\nTelefone: ${data.phone}\nEndereço: ${data.street}, ${data.number}${data.complement ? `, ${data.complement}`: ''} - ${data.neighborhood}, ${data.city}/${data.state}`;
     
     const orderItems = items.map(item => `- ${item.quantity}x ${item.product.name} (Tamanho: ${item.size}${item.gender && item.gender !== 'unisex' ? `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}` : ''}) - ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.price * item.quantity)}`).join('\n');
@@ -64,8 +65,26 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     
     const observations = data.observations ? `\n\n*OBSERVAÇÕES:*\n${data.observations}` : '';
 
-    const message = `Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.\n\n${customerDetails}\n\n*PEDIDO:*\n${orderItems}${total}${observations}\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
+    return `Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.\n\n${customerDetails}\n\n*PEDIDO:*\n${orderItems}${total}${observations}\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
+  }
 
+  const handleGeneratePdf = () => {
+    const data = form.getValues();
+    const doc = new jsPDF();
+    const message = generateOrderMessage(data);
+
+    // Remove asteriscos para o PDF
+    const pdfMessage = message.replace(/\*/g, '');
+
+    doc.setFontSize(16);
+    doc.text('Resumo do Pedido', 10, 10);
+    doc.setFontSize(12);
+    doc.text(pdfMessage, 10, 20);
+    doc.save('pedido.pdf');
+  }
+
+  const onSubmit = (data: OrderFormValues) => {
+    const message = generateOrderMessage(data);
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodedMessage}`;
 
@@ -109,21 +128,20 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
             </FormItem>
           )}
         />
-        <FormField
-            control={form.control}
-            name="street"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Rua</FormLabel>
-                <FormControl>
-                    <Input placeholder="Sua rua" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+                control={form.control}
+                name="street"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Rua</FormLabel>
+                    <FormControl>
+                        <Input placeholder="Sua rua" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
             <FormField
             control={form.control}
             name="number"
@@ -137,20 +155,20 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
                 </FormItem>
             )}
             />
-            <FormField
-            control={form.control}
-            name="complement"
-            render={({ field }) => (
-                <FormItem className="sm:col-span-2">
-                <FormLabel>Complemento</FormLabel>
-                <FormControl>
-                    <Input placeholder="Apto, bloco, etc." {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
         </div>
+        <FormField
+        control={form.control}
+        name="complement"
+        render={({ field }) => (
+            <FormItem>
+            <FormLabel>Complemento</FormLabel>
+            <FormControl>
+                <Input placeholder="Apto, bloco, etc." {...field} />
+            </FormControl>
+            <FormMessage />
+            </FormItem>
+        )}
+        />
          <FormField
             control={form.control}
             name="neighborhood"
@@ -211,9 +229,14 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
           “O valor do frete será calculado e informado posteriormente pelo WhatsApp.”
         </p>
 
-        <Button type="submit" className="w-full">
-          Enviar Pedido via WhatsApp
-        </Button>
+        <div className="flex flex-col gap-2">
+            <Button type="submit" className="w-full">
+              Enviar Pedido via WhatsApp
+            </Button>
+            <Button type="button" variant="outline" className="w-full" onClick={handleGeneratePdf}>
+              Gerar PDF do Pedido
+            </Button>
+        </div>
       </form>
     </Form>
   );
