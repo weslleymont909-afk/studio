@@ -68,9 +68,8 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     return `Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.\n\n${customerDetails}\n\n*PEDIDO:*\n${orderItems}${total}${observations}\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
   }
 
-  const handleGeneratePdf = async () => {
+  const handleGeneratePdf = async (data: OrderFormValues) => {
     const { default: jsPDF } = await import('jspdf');
-    const data = form.getValues();
     const doc = new jsPDF();
     const message = generateOrderMessage(data);
 
@@ -84,7 +83,9 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     doc.save('pedido.pdf');
   }
 
-  const onSubmit = (data: OrderFormValues) => {
+  const onSubmit = async (data: OrderFormValues) => {
+    await handleGeneratePdf(data);
+    
     const message = generateOrderMessage(data);
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodedMessage}`;
@@ -92,8 +93,8 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     window.open(whatsappUrl, '_blank');
     
     toast({
-        title: "Pedido enviado!",
-        description: "Seu pedido foi formatado. Conclua o envio no WhatsApp.",
+        title: "PDF Gerado e Pedido Formatado!",
+        description: "Seu pedido foi salvo como PDF. Conclua o envio no WhatsApp e anexe o arquivo gerado.",
     });
 
     clearCart();
@@ -157,19 +158,21 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
             )}
             />
         </div>
-        <FormField
-        control={form.control}
-        name="complement"
-        render={({ field }) => (
-            <FormItem>
-            <FormLabel>Complemento</FormLabel>
-            <FormControl>
-                <Input placeholder="Apto, bloco, etc." {...field} />
-            </FormControl>
-            <FormMessage />
-            </FormItem>
-        )}
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
+            <FormField
+                control={form.control}
+                name="complement"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Complemento</FormLabel>
+                    <FormControl>
+                        <Input placeholder="Apto, bloco, etc." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+            />
+        </div>
          <FormField
             control={form.control}
             name="neighborhood"
@@ -232,10 +235,7 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
 
         <div className="flex flex-col gap-2">
             <Button type="submit" className="w-full">
-              Enviar Pedido via WhatsApp
-            </Button>
-            <Button type="button" variant="outline" className="w-full" onClick={handleGeneratePdf}>
-              Gerar PDF do Pedido
+              Gerar PDF e Enviar via WhatsApp
             </Button>
         </div>
       </form>
