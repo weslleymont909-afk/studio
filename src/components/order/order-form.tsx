@@ -37,7 +37,7 @@ interface OrderFormProps {
 }
 
 export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
-  const { items, clearCart } = useCart();
+  const { items, clearCart, totalPrice } = useCart();
   const { toast } = useToast();
 
   const form = useForm<OrderFormValues>({
@@ -58,11 +58,13 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
   const onSubmit = (data: OrderFormValues) => {
     const customerDetails = `*DADOS DO CLIENTE:*\nNome: ${data.fullName}\nTelefone: ${data.phone}\nEndereço: ${data.street}, ${data.number}${data.complement ? `, ${data.complement}`: ''} - ${data.neighborhood}, ${data.city}/${data.state}`;
     
-    const orderItems = items.map(item => `- ${item.quantity}x ${item.product.name} (Tamanho: ${item.size}${item.gender && item.gender !== 'unisex' ? `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}` : ''})`).join('\n');
+    const orderItems = items.map(item => `- ${item.quantity}x ${item.product.name} (Tamanho: ${item.size}${item.gender && item.gender !== 'unisex' ? `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}` : ''}) - ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.price * item.quantity)}`).join('\n');
+
+    const total = `\n*Subtotal: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPrice)}*`;
     
     const observations = data.observations ? `\n\n*OBSERVAÇÕES:*\n${data.observations}` : '';
 
-    const message = `Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.\n\n${customerDetails}\n\n*PEDIDO:*\n${orderItems}${observations}\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
+    const message = `Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.\n\n${customerDetails}\n\n*PEDIDO:*\n${orderItems}${total}${observations}\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodedMessage}`;

@@ -81,6 +81,7 @@ export interface CartContextType extends CartState {
   removeItem: (itemId: string) => void;
   clearCart: () => void;
   totalItems: number;
+  totalPrice: number;
 }
 
 export const CartContext = createContext<CartContextType | undefined>(
@@ -116,6 +117,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     0
   );
 
+  const totalPrice = state.items.reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0
+  );
+
   return (
     <CartContext.Provider
       value={{
@@ -125,6 +131,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         removeItem,
         clearCart,
         totalItems,
+        totalPrice,
       }}
     >
       {children}

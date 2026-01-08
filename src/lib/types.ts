@@ -9,6 +9,7 @@ export interface Product {
   category: Animal;
   imageId: string;
   sizes: Size[];
+  price: number;
   genders?: Gender[];
   isBestSeller?: boolean;
 }

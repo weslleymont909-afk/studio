@@ -41,6 +41,9 @@ export function CartItem({ item }: CartItemProps) {
           Tamanho: {item.size}
           {item.gender && item.gender !== 'unisex' && `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}`}
         </p>
+        <p className="text-sm font-medium mt-1">
+          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.price)}
+        </p>
 
         <div className="mt-2 flex items-center gap-2">
           <Button
@@ -68,14 +71,19 @@ export function CartItem({ item }: CartItemProps) {
           </Button>
         </div>
       </div>
-      <Button
-        size="icon"
-        variant="ghost"
-        className="text-muted-foreground"
-        onClick={() => removeItem(item.id)}
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
+      <div className='flex flex-col items-end'>
+        <p className="font-semibold">
+            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.price * item.quantity)}
+        </p>
+        <Button
+            size="icon"
+            variant="ghost"
+            className="text-muted-foreground mt-2"
+            onClick={() => removeItem(item.id)}
+        >
+            <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 }

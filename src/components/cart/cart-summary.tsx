@@ -14,7 +14,7 @@ import {
 import { useState } from 'react';
 
 export function CartSummary() {
-  const { totalItems, items } = useCart();
+  const { totalItems, items, totalPrice } = useCart();
   const [isOrderFormOpen, setOrderFormOpen] = useState(false);
 
   if (totalItems === 0) {
@@ -25,9 +25,18 @@ export function CartSummary() {
     <>
       <Separator className="my-4" />
       <div className="space-y-4">
-        <div className="flex justify-between font-medium">
+        <div className="flex justify-between text-sm">
           <span>Total de Itens</span>
           <span>{totalItems}</span>
+        </div>
+        <div className="flex justify-between font-semibold text-lg">
+          <span>Subtotal</span>
+          <span>
+            {new Intl.NumberFormat('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            }).format(totalPrice)}
+          </span>
         </div>
         <p className="text-xs text-muted-foreground">
           O valor do frete será calculado e informado posteriormente pelo

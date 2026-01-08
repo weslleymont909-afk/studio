@@ -82,7 +82,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden flex flex-col">
         <CardHeader className="p-0">
           {image && (
             <div className="relative aspect-square w-full">
@@ -99,13 +99,16 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
         </CardHeader>
-        <CardContent className="p-4">
+        <CardContent className="p-4 flex-1">
           <CardTitle className="text-lg">{product.name}</CardTitle>
           <CardDescription className="mt-1 h-10 text-sm">
             {product.description}
           </CardDescription>
         </CardContent>
-        <CardFooter className="p-4 pt-0">
+        <CardFooter className="p-4 pt-0 flex-col items-start">
+          <div className="font-bold text-lg mb-2">
+            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}
+          </div>
           <DialogTrigger asChild>
             <Button className="w-full">Adicionar ao Pedido</Button>
           </DialogTrigger>
