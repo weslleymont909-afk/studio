@@ -3,7 +3,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import jsPDF from 'jspdf';
 import {
   Form,
   FormControl,
@@ -18,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/hooks/use-toast';
 import { WHATSAPP_PHONE_NUMBER } from '@/lib/constants';
+import type jsPDF from 'jspdf';
 
 const orderFormSchema = z.object({
   fullName: z.string().min(2, { message: 'Nome completo é obrigatório.' }),
@@ -68,7 +68,8 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     return `Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.\n\n${customerDetails}\n\n*PEDIDO:*\n${orderItems}${total}${observations}\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
   }
 
-  const handleGeneratePdf = () => {
+  const handleGeneratePdf = async () => {
+    const { default: jsPDF } = await import('jspdf');
     const data = form.getValues();
     const doc = new jsPDF();
     const message = generateOrderMessage(data);
