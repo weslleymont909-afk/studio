@@ -12,7 +12,7 @@ const ptSans = PT_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Pet Protect Outfitters',
+  title: 'FS Moda Pet',
   description: 'Digital catalog for surgical pet apparel.',
 };
 

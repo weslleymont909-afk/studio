@@ -10,7 +10,7 @@ export function Footer() {
             <Logo />
           </div>
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © {currentYear} Pet Protect Outfitters. Todos os direitos reservados.
+            © {currentYear} FS Moda Pet. Todos os direitos reservados.
           </p>
         </div>
       </div>
