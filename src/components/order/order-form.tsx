@@ -90,23 +90,35 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
   };
 
   const generateOrderMessage = (data: OrderFormValues) => {
-    const customerDetails = `*DADOS DO CLIENTE:*\nNome: ${data.fullName}\nTelefone: ${data.phone}\nEndereço: ${data.street}, ${data.number}${data.complement ? `, ${data.complement}` : ''} - ${data.neighborhood}, ${data.city}/${data.state} - CEP: ${data.cep}`;
-
+    const header = 'Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.';
+    
+    const clientHeader = `DADOS DO CLIENTE`;
+    const clientData = `Nome\tTelefone\tCEP\tEndereço\tNúmero\tComplemento\tBairro\tCidade\tEstado`;
+    const clientValues = `${data.fullName}\t'${data.phone}\t'${data.cep}\t${data.street}\t${data.number}\t${data.complement || ''}\t${data.neighborhood}\t${data.city}\t${data.state}`;
+    
+    const orderHeader = `\n\nPEDIDO`;
+    const orderItemsHeader = `Qtd\tProduto\tTamanho\tVariação\tSubtotal`;
     const orderItems = items
       .map(
-        (item) =>
-          `- ${item.quantity}x ${item.product.name} (Tamanho: ${item.size}${item.gender && item.gender !== 'unisex' ? `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}` : ''}) - ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.price * item.quantity)}`
+        (item) => {
+          const variation = item.gender && item.gender !== 'unisex' ? (item.gender === 'male' ? 'Macho' : 'Fêmea') : '';
+          const subtotal = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.price * item.quantity);
+          return `${item.quantity}\t${item.product.name}\t${item.size}\t${variation}\t${subtotal}`;
+        }
       )
       .join('\n');
 
-    const total = `\n*Subtotal: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPrice)}*`;
+    const total = `\n\nTOTAL DO PEDIDO\t${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPrice)}`;
 
     const observations = data.observations
-      ? `\n\n*OBSERVAÇÕES:*\n${data.observations}`
+      ? `\n\nOBSERVAÇÕES\n${data.observations}`
       : '';
+      
+    const footer = `\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
 
-    return `Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.\n\n${customerDetails}\n\n*PEDIDO:*\n${orderItems}${total}${observations}\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
+    return `${header}\n\n${clientHeader}\n${clientData}\n${clientValues}\n${orderHeader}\n${orderItemsHeader}\n${orderItems}\n${total}${observations}${footer}`;
   };
+
 
   const onSubmit = (data: OrderFormValues) => {
     const message = generateOrderMessage(data);
