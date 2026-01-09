@@ -1,8 +1,9 @@
 import { products } from '@/lib/products';
-import { Header } from '@/components/layout/header';
 import { ProductList } from '@/components/products/product-list';
 import { Footer } from '@/components/layout/footer';
 import { FloatingWhatsAppButton } from '@/components/floating-whatsapp-button';
+import { Header } from '@/components/layout/header';
+
 
 export default function Home() {
   return (
