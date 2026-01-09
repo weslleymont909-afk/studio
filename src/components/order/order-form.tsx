@@ -17,19 +17,43 @@ import { Textarea } from '@/components/ui/textarea';
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/hooks/use-toast';
 import { WHATSAPP_PHONE_NUMBER } from '@/lib/constants';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 
-const orderFormSchema = z.object({
-  fullName: z.string().min(2, { message: 'Nome completo é obrigatório.' }),
-  phone: z.string().min(10, { message: 'Número de telefone inválido.' }),
-  cep: z.string().min(8, { message: 'CEP deve ter 8 dígitos.' }).max(9, { message: 'CEP inválido.' }),
-  street: z.string().min(3, { message: 'Rua é obrigatória.' }),
-  number: z.string().min(1, { message: 'Número é obrigatório.' }),
-  complement: z.string().optional(),
-  neighborhood: z.string().min(2, { message: 'Bairro é obrigatório.' }),
-  city: z.string().min(2, { message: 'Cidade é obrigatória.' }),
-  state: z.string().min(2, { message: 'Estado é obrigatório.' }),
-  observations: z.string().optional(),
-});
+const orderFormSchema = z
+  .object({
+    personType: z.enum(['cpf', 'cnpj'], {
+      required_error: 'Selecione o tipo de pessoa.',
+    }),
+    name: z.string().min(2, { message: 'Nome é obrigatório.' }),
+    document: z
+      .string()
+      .min(11, { message: 'Documento deve ter pelo menos 11 dígitos.' }),
+    stateRegistration: z.string().optional(),
+    phone: z.string().min(10, { message: 'Número de telefone inválido.' }),
+    cep: z
+      .string()
+      .min(8, { message: 'CEP deve ter 8 dígitos.' })
+      .max(9, { message: 'CEP inválido.' }),
+    street: z.string().min(3, { message: 'Rua é obrigatória.' }),
+    number: z.string().min(1, { message: 'Número é obrigatório.' }),
+    complement: z.string().optional(),
+    neighborhood: z.string().min(2, { message: 'Bairro é obrigatório.' }),
+    city: z.string().min(2, { message: 'Cidade é obrigatória.' }),
+    state: z.string().min(2, { message: 'Estado é obrigatório.' }),
+    observations: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.personType === 'cnpj') {
+        return !!data.stateRegistration && data.stateRegistration.length > 0;
+      }
+      return true;
+    },
+    {
+      message: 'Inscrição Estadual é obrigatória para CNPJ.',
+      path: ['stateRegistration'],
+    }
+  );
 
 type OrderFormValues = z.infer<typeof orderFormSchema>;
 
@@ -44,7 +68,10 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderFormSchema),
     defaultValues: {
-      fullName: '',
+      personType: 'cpf',
+      name: '',
+      document: '',
+      stateRegistration: '',
       phone: '',
       cep: '',
       street: '',
@@ -57,6 +84,8 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     },
   });
 
+  const personType = form.watch('personType');
+
   const handleCepBlur = async (cep: string) => {
     const cleanedCep = cep.replace(/\D/g, '');
     if (cleanedCep.length !== 8) {
@@ -64,7 +93,9 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     }
 
     try {
-      const response = await fetch(`https://viacep.com.br/ws/${cleanedCep}/json/`);
+      const response = await fetch(
+        `https://viacep.com.br/ws/${cleanedCep}/json/`
+      );
       const data = await response.json();
 
       if (!data.erro) {
@@ -84,7 +115,8 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
       toast({
         variant: 'destructive',
         title: 'Erro ao buscar CEP',
-        description: 'Não foi possível buscar o endereço. Tente novamente mais tarde.',
+        description:
+          'Não foi possível buscar o endereço. Tente novamente mais tarde.',
       });
     }
   };
@@ -114,7 +146,13 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     message += `${orderItems}\n\n`;
     message += `*Subtotal:* ${total}\n\n`;
     message += `*--- DADOS PARA ENTREGA ---*\n`;
-    message += `*Nome:* ${data.fullName}\n`;
+    message += `*Nome:* ${data.name}\n`;
+    message += `*${data.personType === 'cpf' ? 'CPF' : 'CNPJ'}:* ${
+      data.document
+    }\n`;
+    if (data.personType === 'cnpj' && data.stateRegistration) {
+      message += `*Inscrição Estadual:* ${data.stateRegistration}\n`;
+    }
     message += `*Telefone:* ${data.phone}\n`;
     message += `*Endereço:* ${data.street}, ${data.number}${
       data.complement ? ` - ${data.complement}` : ''
@@ -154,17 +192,91 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="fullName"
+          name="personType"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome Completo</FormLabel>
+            <FormItem className="space-y-3">
+              <FormLabel>Tipo de Pessoa</FormLabel>
               <FormControl>
-                <Input placeholder="Seu nome completo" {...field} />
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex space-x-4"
+                >
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="cpf" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Pessoa Física</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="cnpj" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Pessoa Jurídica</FormLabel>
+                  </FormItem>
+                </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                {personType === 'cpf' ? 'Nome Completo' : 'Razão Social'}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  placeholder={
+                    personType === 'cpf'
+                      ? 'Seu nome completo'
+                      : 'Nome da sua empresa'
+                  }
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="document"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{personType === 'cpf' ? 'CPF' : 'CNPJ'}</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder={
+                    personType === 'cpf' ? '000.000.000-00' : '00.000.000/0000-00'
+                  }
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {personType === 'cnpj' && (
+          <FormField
+            control={form.control}
+            name="stateRegistration"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Inscrição Estadual</FormLabel>
+                <FormControl>
+                  <Input placeholder="Número da Inscrição Estadual" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
         <FormField
           control={form.control}
           name="phone"
@@ -185,7 +297,11 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
             <FormItem>
               <FormLabel>CEP</FormLabel>
               <FormControl>
-                <Input placeholder="00000-000" {...field} onBlur={(e) => handleCepBlur(e.target.value)} />
+                <Input
+                  placeholder="00000-000"
+                  {...field}
+                  onBlur={(e) => handleCepBlur(e.target.value)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -307,3 +423,5 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     </Form>
   );
 }
+
+    
