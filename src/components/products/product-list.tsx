@@ -22,13 +22,13 @@ export function ProductList({ allProducts }: ProductListProps) {
       onValueChange={(value) => setActiveTab(value as 'dog' | 'cat')}
       className="w-full"
     >
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="dog">
-          <Dog className="mr-2 h-4 w-4" />
+      <TabsList className="grid h-14 w-full grid-cols-2">
+        <TabsTrigger value="dog" className="text-lg">
+          <Dog className="mr-2 h-6 w-6" />
           Cachorros
         </TabsTrigger>
-        <TabsTrigger value="cat">
-          <Cat className="mr-2 h-4 w-4" />
+        <TabsTrigger value="cat" className="text-lg">
+          <Cat className="mr-2 h-6 w-6" />
           Gatos
         </TabsTrigger>
       </TabsList>
