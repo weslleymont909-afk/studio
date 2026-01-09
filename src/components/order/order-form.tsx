@@ -90,35 +90,47 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
   };
 
   const generateOrderMessage = (data: OrderFormValues) => {
-    const header = 'Olá! Segue meu pedido do catálogo de roupas cirúrgicas para pets.';
-    
-    const clientHeader = `DADOS DO CLIENTE`;
-    const clientData = `Nome\tTelefone\tCEP\tEndereço\tNúmero\tComplemento\tBairro\tCidade\tEstado`;
-    const clientValues = `${data.fullName}\t'${data.phone}\t'${data.cep}\t${data.street}\t${data.number}\t${data.complement || ''}\t${data.neighborhood}\t${data.city}\t${data.state}`;
-    
-    const orderHeader = `\n\nPEDIDO`;
-    const orderItemsHeader = `Qtd\tProduto\tTamanho\tVariação\tSubtotal`;
     const orderItems = items
       .map(
-        (item) => {
-          const variation = item.gender && item.gender !== 'unisex' ? (item.gender === 'male' ? 'Macho' : 'Fêmea') : '';
-          const subtotal = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.price * item.quantity);
-          return `${item.quantity}\t${item.product.name}\t${item.size}\t${variation}\t${subtotal}`;
-        }
+        (item) =>
+          `- ${item.quantity}x ${item.product.name} (Tamanho: ${item.size}${
+            item.gender && item.gender !== 'unisex'
+              ? `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}`
+              : ''
+          }) - ${new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(item.product.price * item.quantity)}`
       )
       .join('\n');
 
-    const total = `\n\nTOTAL DO PEDIDO\t${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPrice)}`;
+    const total = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(totalPrice);
 
-    const observations = data.observations
-      ? `\n\nOBSERVAÇÕES\n${data.observations}`
-      : '';
-      
-    const footer = `\n\nAguardo o retorno com o valor do frete. Obrigado(a)!`;
+    let message = `*Olá! Gostaria de fazer um pedido.*\n\n`;
+    message += `*--- RESUMO DO PEDIDO ---*\n`;
+    message += `${orderItems}\n\n`;
+    message += `*Subtotal:* ${total}\n\n`;
+    message += `*--- DADOS PARA ENTREGA ---*\n`;
+    message += `*Nome:* ${data.fullName}\n`;
+    message += `*Telefone:* ${data.phone}\n`;
+    message += `*Endereço:* ${data.street}, ${data.number}${
+      data.complement ? ` - ${data.complement}` : ''
+    }\n`;
+    message += `*Bairro:* ${data.neighborhood}\n`;
+    message += `*Cidade/Estado:* ${data.city}/${data.state}\n`;
+    message += `*CEP:* ${data.cep}\n\n`;
 
-    return `${header}\n\n${clientHeader}\n${clientData}\n${clientValues}\n${orderHeader}\n${orderItemsHeader}\n${orderItems}\n${total}${observations}${footer}`;
+    if (data.observations) {
+      message += `*Observações:* ${data.observations}\n\n`;
+    }
+
+    message += `Aguardo o retorno com o valor do frete. Obrigado(a)!`;
+
+    return message;
   };
-
 
   const onSubmit = (data: OrderFormValues) => {
     const message = generateOrderMessage(data);
