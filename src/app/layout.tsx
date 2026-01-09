@@ -13,7 +13,19 @@ const ptSans = PT_Sans({
 
 export const metadata: Metadata = {
   title: 'FS Moda Pet',
-  description: 'Digital catalog for surgical pet apparel.',
+  description: 'Faça seu pedido aqui',
+  openGraph: {
+    title: 'FS Moda Pet',
+    description: 'Faça seu pedido aqui',
+    images: [
+      {
+        url: 'https://i.postimg.cc/MZdk3ryn/270833480-140534175031119-2361686743964558044-n.jpg',
+        width: 800,
+        height: 600,
+        alt: 'FS Moda Pet Logo',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
