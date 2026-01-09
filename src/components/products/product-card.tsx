@@ -57,7 +57,7 @@ export function ProductCard({ product }: ProductCardProps) {
       });
       return;
     }
-    if (product.genders && product.genders.length > 0 && !selectedGender) {
+    if (product.genders && product.genders.length > 0 && !product.genders.includes('unisex') && !selectedGender) {
       toast({
         title: 'Variação não selecionada',
         description: 'Por favor, escolha uma variação (macho/fêmea).',
@@ -76,6 +76,9 @@ export function ProductCard({ product }: ProductCardProps) {
     setQuantity(1);
     if (product.sizes.length > 1) {
       setSelectedSize(undefined);
+    }
+    if (product.genders && !product.genders.includes('unisex')) {
+      setSelectedGender(undefined);
     }
   };
 
@@ -145,7 +148,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
           
-          {product.genders && product.genders.length > 0 && product.genders[0] !== 'unisex' && (
+          {product.genders && !product.genders.includes('unisex') && (
             <div>
               <Label>Variação</Label>
               <RadioGroup

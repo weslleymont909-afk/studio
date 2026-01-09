@@ -8,7 +8,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['01'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 12.8,
     isBestSeller: true,
   },
@@ -19,7 +19,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['02'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 12.8,
   },
   {
@@ -29,7 +29,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['03'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 12.8,
   },
   {
@@ -39,7 +39,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['04'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 12.8,
   },
   {
@@ -49,7 +49,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['05'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 14.8,
   },
   {
@@ -59,7 +59,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['06'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 14.8,
   },
   {
@@ -69,7 +69,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['07'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 14.8,
   },
   {
@@ -79,7 +79,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['08'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 14.8,
   },
   {
@@ -89,7 +89,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['09'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 14.8,
   },
   {
@@ -99,7 +99,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['10'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 16.8,
   },
   {
@@ -109,7 +109,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['11'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 16.8,
   },
   {
@@ -119,7 +119,7 @@ export const products: Product[] = [
     category: 'dog',
     imageId: 'dog-surgical-shirt-unisex',
     sizes: ['12'],
-    genders: ['unisex'],
+    genders: ['male', 'female'],
     price: 16.8,
   },
   {
@@ -129,6 +129,7 @@ export const products: Product[] = [
     category: 'cat',
     imageId: 'cat-surgical-shirt-unisex',
     sizes: ['00'],
+    genders: ['unisex'],
     price: 12.8,
   },
   {
@@ -138,6 +139,7 @@ export const products: Product[] = [
     category: 'cat',
     imageId: 'cat-surgical-shirt-unisex',
     sizes: ['01'],
+    genders: ['unisex'],
     price: 12.8,
     isBestSeller: true,
   },
@@ -148,6 +150,7 @@ export const products: Product[] = [
     category: 'cat',
     imageId: 'cat-surgical-shirt-unisex',
     sizes: ['02'],
+    genders: ['unisex'],
     price: 12.8,
   },
   {
@@ -157,6 +160,7 @@ export const products: Product[] = [
     category: 'cat',
     imageId: 'cat-surgical-shirt-unisex',
     sizes: ['03'],
+    genders: ['unisex'],
     price: 12.8,
   },
   {
@@ -166,6 +170,7 @@ export const products: Product[] = [
     category: 'cat',
     imageId: 'cat-surgical-shirt-unisex',
     sizes: ['04'],
+    genders: ['unisex'],
     price: 12.8,
   },
   {
@@ -175,6 +180,7 @@ export const products: Product[] = [
     category: 'cat',
     imageId: 'cat-surgical-shirt-unisex',
     sizes: ['05'],
+    genders: ['unisex'],
     price: 14.8,
   },
 ];
