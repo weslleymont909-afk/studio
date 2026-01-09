@@ -21,6 +21,7 @@ import { WHATSAPP_PHONE_NUMBER } from '@/lib/constants';
 const orderFormSchema = z.object({
   fullName: z.string().min(2, { message: 'Nome completo é obrigatório.' }),
   phone: z.string().min(10, { message: 'Número de telefone inválido.' }),
+  cep: z.string().min(8, { message: 'CEP deve ter 8 dígitos.' }).max(9, { message: 'CEP inválido.' }),
   street: z.string().min(3, { message: 'Rua é obrigatória.' }),
   number: z.string().min(1, { message: 'Número é obrigatório.' }),
   complement: z.string().optional(),
@@ -45,6 +46,7 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     defaultValues: {
       fullName: '',
       phone: '',
+      cep: '',
       street: '',
       number: '',
       complement: '',
@@ -55,8 +57,40 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     },
   });
 
+  const handleCepBlur = async (cep: string) => {
+    const cleanedCep = cep.replace(/\D/g, '');
+    if (cleanedCep.length !== 8) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cleanedCep}/json/`);
+      const data = await response.json();
+
+      if (!data.erro) {
+        form.setValue('street', data.logradouro);
+        form.setValue('neighborhood', data.bairro);
+        form.setValue('city', data.localidade);
+        form.setValue('state', data.uf);
+        form.setFocus('number');
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'CEP não encontrado',
+          description: 'Por favor, verifique o CEP e tente novamente.',
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao buscar CEP',
+        description: 'Não foi possível buscar o endereço. Tente novamente mais tarde.',
+      });
+    }
+  };
+
   const generateOrderMessage = (data: OrderFormValues) => {
-    const customerDetails = `*DADOS DO CLIENTE:*\nNome: ${data.fullName}\nTelefone: ${data.phone}\nEndereço: ${data.street}, ${data.number}${data.complement ? `, ${data.complement}` : ''} - ${data.neighborhood}, ${data.city}/${data.state}`;
+    const customerDetails = `*DADOS DO CLIENTE:*\nNome: ${data.fullName}\nTelefone: ${data.phone}\nEndereço: ${data.street}, ${data.number}${data.complement ? `, ${data.complement}` : ''} - ${data.neighborhood}, ${data.city}/${data.state} - CEP: ${data.cep}`;
 
     const orderItems = items
       .map(
@@ -115,6 +149,19 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
               <FormLabel>Nº de Telefone (WhatsApp)</FormLabel>
               <FormControl>
                 <Input placeholder="(XX) XXXXX-XXXX" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="cep"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>CEP</FormLabel>
+              <FormControl>
+                <Input placeholder="00000-000" {...field} onBlur={(e) => handleCepBlur(e.target.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
