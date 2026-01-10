@@ -181,6 +181,6 @@ export const products: Product[] = [
     imageId: 'cat-surgical-shirt-unisex',
     sizes: ['05'],
     genders: ['unisex'],
-    price: 14.8,
+    price: 12.8,
   },
 ];
