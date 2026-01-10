@@ -10,7 +10,6 @@ export const products: Product[] = [
     sizes: ['01'],
     genders: ['male', 'female'],
     price: 12.8,
-    isBestSeller: true,
   },
   {
     id: 'dog-02',
@@ -141,7 +140,6 @@ export const products: Product[] = [
     sizes: ['01'],
     genders: ['unisex'],
     price: 12.8,
-    isBestSeller: true,
   },
   {
     id: 'cat-02',

@@ -98,9 +98,6 @@ export function ProductCard({ product }: ProductCardProps) {
               <Badge className="absolute top-2 right-2 text-base">
                 N° {product.sizes[0]}
               </Badge>
-               {product.isBestSeller && (
-                <Badge className="absolute top-2 left-2">Mais Vendido</Badge>
-              )}
             </div>
           )}
         </CardHeader>
