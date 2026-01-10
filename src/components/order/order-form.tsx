@@ -124,18 +124,17 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
   const generateOrderMessage = (data: OrderFormValues) => {
     const orderItems = items
       .map((item) => {
-        let details = `(${item.size}`;
+        let details = '';
         if (item.gender && item.gender !== 'unisex') {
-          details += `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}`;
+          details = `(${item.gender === 'male' ? 'Macho' : 'Fêmea'})`;
         }
-        details += `)`;
   
         const price = new Intl.NumberFormat('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         }).format(item.product.price * item.quantity);
   
-        return `- ${item.quantity}x ${item.product.name} ${details} - ${price}`;
+        return `- ${item.quantity}x ${item.product.name} ${details} - ${price}`.trim();
       })
       .join('\n');
 
