@@ -115,7 +115,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}
           </div>
           <DialogTrigger asChild>
-            <Button className="w-full">Adicionar ao Pedido</Button>
+            <Button className="w-full whitespace-nowrap">Adicionar ao Pedido</Button>
           </DialogTrigger>
         </CardFooter>
       </Card>
@@ -184,7 +184,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
 
         </div>
-        <Button onClick={handleAddToCart}>Adicionar ao Pedido</Button>
+        <Button onClick={handleAddToCart} className='whitespace-nowrap'>Adicionar ao Pedido</Button>
       </DialogContent>
     </Dialog>
   );

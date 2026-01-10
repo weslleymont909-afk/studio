@@ -123,17 +123,20 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
 
   const generateOrderMessage = (data: OrderFormValues) => {
     const orderItems = items
-      .map(
-        (item) =>
-          `- ${item.quantity}x ${item.product.name} (Tamanho: ${item.size}${
-            item.gender && item.gender !== 'unisex'
-              ? `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}`
-              : ''
-          }) - ${new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-          }).format(item.product.price * item.quantity)}`
-      )
+      .map((item) => {
+        let details = `(${item.size}`;
+        if (item.gender && item.gender !== 'unisex') {
+          details += `, ${item.gender === 'male' ? 'Macho' : 'Fêmea'}`;
+        }
+        details += `)`;
+  
+        const price = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        }).format(item.product.price * item.quantity);
+  
+        return `- ${item.quantity}x ${item.product.name} ${details} - ${price}`;
+      })
       .join('\n');
 
     const total = new Intl.NumberFormat('pt-BR', {
@@ -423,5 +426,3 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     </Form>
   );
 }
-
-    
