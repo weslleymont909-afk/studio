@@ -16,8 +16,8 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/hooks/use-toast';
-import { WHATSAPP_PHONE_NUMBER } from '@/lib/constants';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { WHATSAPP_PHONE_NUMBER } from '@/lib/constants';
 
 const orderFormSchema = z
   .object({
@@ -176,6 +176,16 @@ export function OrderForm({ setOrderFormOpen }: OrderFormProps) {
     const message = generateOrderMessage(data);
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodedMessage}`;
+
+    if (!WHATSAPP_PHONE_NUMBER) {
+      toast({
+        variant: 'destructive',
+        title: 'Erro de Configuração',
+        description:
+          'O número de WhatsApp não está configurado. Por favor, contate o suporte.',
+      });
+      return;
+    }
 
     window.open(whatsappUrl, '_blank');
 

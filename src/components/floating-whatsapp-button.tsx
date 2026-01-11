@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { WHATSAPP_PHONE_NUMBER } from '@/lib/constants';
 
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -22,8 +21,13 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 
 export function FloatingWhatsAppButton() {
+  const WHATSAPP_PHONE_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_PHONE_NUMBER;
   const message = encodeURIComponent('Olá! Gostaria de mais informações sobre as roupas cirúrgicas.');
   const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${message}`;
+
+  if (!WHATSAPP_PHONE_NUMBER) {
+    return null; // Não mostra o botão se o número não estiver configurado
+  }
 
   return (
     <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">

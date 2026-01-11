@@ -1,4 +1,5 @@
 import { Logo } from '@/components/icons/logo';
+import { WHATSAPP_PHONE_NUMBER } from '@/lib/constants';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -13,6 +14,10 @@ export function Footer() {
             © {currentYear} FS Moda Pet. Todos os direitos reservados.
           </p>
         </div>
+      </div>
+      {/* Depuração: Mostrar o número do WhatsApp que está sendo usado */}
+      <div className="bg-yellow-200 text-black text-center p-2 text-xs">
+        <p>Número de depuração: {WHATSAPP_PHONE_NUMBER || 'NÚMERO NÃO CONFIGURADO'}</p>
       </div>
     </footer>
   );
